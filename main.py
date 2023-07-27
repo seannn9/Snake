@@ -78,7 +78,6 @@ def changeDirection(newDirection):
         if direction != "up":
             direction = newDirection
 
-
 def checkCollisions(snake):
     x, y = snake.coordinates[0]
     if x < 0 or x >= width:
@@ -96,6 +95,11 @@ def checkCollisions(snake):
 def gameOver():
     canvas.delete(ALL)
     canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=("consolas", 70), text="GAME OVER", fill="red")
+    reset = Button(window, text="Try Again", width=50, height=10, command=tryAgain)
+    reset.place(x=(windowWidth/2)-(windowWidth/4), y=500)
+
+def tryAgain():
+    pass
 
 window = Tk()
 window.title("Snake") 
@@ -121,7 +125,6 @@ x = int((screenWidth/2) - (windowWidth/2))
 y = int((screenHeight/2) - (windowHeight/2))
 
 window.geometry(f"{windowWidth}x{windowHeight}+{x}+{y}")
-
 
 window.bind("<Left>", lambda event: changeDirection("left"))
 window.bind("<Right>", lambda event: changeDirection("right"))
