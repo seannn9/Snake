@@ -3,7 +3,7 @@ import random
 
 height = 700
 width = 700
-speed = 50
+speed = 100
 space = 50 
 bodyParts = 3
 snakeColor = "#00FF00"
@@ -45,11 +45,22 @@ def nextTurn(snake, food):
     snake.coordinates.insert(0, (x, y))
     square = canvas.create_rectangle(x, y, x + space, y + space, fill=snakeColor)
     snake.squares.insert(0, square)
-    del snake.coordinates[-1]
-    canvas.delete(snake.squares[-1])
-    del snake.squares[-1]
+
+    if x == food.coordinates[0] and y == food.coordinates[1]:
+        global score
+        score+=1
+        label.config(text=f"Score: {score}")
+        canvas.delete("Food")
+        food = Food()
+    else:
+        del snake.coordinates[-1]
+        canvas.delete(snake.squares[-1])
+        del snake.squares[-1]
  
-    window.after(speed, nextTurn, snake, food)
+    if checkCollisions(snake):
+        gameOver()
+    else:
+        window.after(speed, nextTurn, snake, food)
 
 def changeDirection(newDirection):
     global direction
@@ -68,11 +79,23 @@ def changeDirection(newDirection):
             direction = newDirection
 
 
-def checkCollisions():
-    pass
+def checkCollisions(snake):
+    x, y = snake.coordinates[0]
+    if x < 0 or x >= width:
+        print("Game Over")
+        return True
+    elif y < 0 or y >= height:
+        print("Game Over")
+        return True
+    
+    for i in snake.coordinates[1:]:
+        if x == i[0] and y == i[1]:
+            return True
+    return False
 
 def gameOver():
-    pass
+    canvas.delete(ALL)
+    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=("consolas", 70), text="GAME OVER", fill="red")
 
 window = Tk()
 window.title("Snake") 
